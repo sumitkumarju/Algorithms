@@ -37,7 +37,7 @@ int main()
             v.pb(d);
         }
         sort(v.begin(),v.end());
-        ll k = (1<<m)-n;
+        ll k = pow(2,m)-n;
         ll idx=(k-1)/2;
         for(ll i:v)
         {
