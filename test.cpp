@@ -1,16 +1,61 @@
-/******************************************************************************
-
-                              Online C++ Compiler.
-               Code, Compile, Run and Debug C++ program online.
-Write your code in this editor and press "Run" button to compile and execute it.
-
-*******************************************************************************/
-
 #include<bits/stdc++.h>
 using namespace std;
-
-#define ll long long
-#define pb push_back
+class node{
+public:
+    char c;
+    map<char,node*>m;
+    bool isTerminal;
+    node(char ch)
+    {
+        c=ch;
+        isTerminal=false;
+    }
+};
+class Trie{
+public:
+    node*root;
+    Trie()
+    {
+    root=new node('\0');
+    }
+    void insert(string s)
+    {
+        node* t=root;
+        for(int i=0;i<s.length();i++)
+        {
+            if(t->m.find(s[i])==m.end())
+            {
+                t->m[s[i]] = new node(s[i]);
+            }
+            t=t->m[s[i]];
+        }
+        t->isTerminal=true;
+    }
+    void search(string s)
+    {
+        node* t=root;
+        for(int i=0;i<s.length();i++)
+        {
+            if(t->m.find(s[i])==m.end())
+            {
+                break;
+            }
+            t=t->m[s[i]];
+        }
+        vector<string>v;
+        word(s,t,v);
+        return v;
+    }
+    void word(string ans,node* root,vector<string>& v)
+    {
+        if(root==NULL)
+        return;
+        if(root->isTerminal)
+        v.push_back(ans);
+        for(auto k:root->m)
+        word(ans+k.first,k.second,v);
+    }
+};
 
 int main()
 {
@@ -18,49 +63,34 @@ int main()
     cin>>t;
     while(t--)
     {
-
-        ll n;
-        ll m;
-        cin>>n>>m;
-        vector<ll>v;
+        int n;
+        cin>>n;
+        string a[n];
+        Trie root=new Trie();
         for(int i=0;i<n;i++)
         {
-
-            string s;
-            cin>>s;
-            ll d=0;
-            for(char c :s)
+            cin>>a[i];
+            root.insert(a[i]);
+        }
+        string s;
+        cin>>s;
+        string t;
+        for(int i=1;i<=s.length();i++)
+        {
+            t=s.substr(0,i);
+            vector<string>v;
+            v=root.search(t);
+            if(v.size()==1&&v[0]==s)
             {
-              d*=2;
-              d+=c-'0';
+                cout<<"0"<<endl;
             }
-            v.pb(d);
-        }
-        sort(v.begin(),v.end());
-        ll k = (1<<m)-n;
-        ll idx=(k-1)/2;
-        for(ll i:v)
-        {
-            if(i<=idx)
-                idx++;
             else
-                break;
-
+            {
+                for(auto s:v)
+                 cout<<s<<" ";
+                cout<<endl;
+            }
         }
-        //cout<<idx<<endl;
-        string ans="";
-        while(idx)
-        {
-
-            ans=(char)((idx%2)+'0')+ans;
-            idx/=2;
-        }
-        for(ll i=ans.length()+1;i<=m;i++)
-            ans='0'+ans;
-        cout<<ans<<endl;
-
-
     }
-
-   return 0;
+    return 0;
 }
